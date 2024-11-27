@@ -6,7 +6,7 @@ description: Setting up your validator node has never been so easy. Get your val
 
 <figure><img src="https://raw.githubusercontent.com/kj89/cosmos-images/main/logos/uptick.png" alt=""><figcaption></figcaption></figure>
 
-**Chain ID**: uptick_117-1 | **Latest Version Tag**: v0.2.8 | **Custom Port**: 115
+**Chain ID**: uptick_117-1 | **Latest Version Tag**: v0.2.19 | **Custom Port**: 115
 
 ### Setup validator name
 
@@ -15,7 +15,7 @@ Replace **YOUR_MONIKER_GOES_HERE** with your validator name
 {% endhint %}
 
 ```bash
-MONIKER="YOUR_MONIKER_GOES_HERE"
+MONIKER="nkbblocks"
 ```
 
 ### Install dependencies
@@ -32,7 +32,7 @@ sudo apt -qy upgrade
 
 ```bash
 sudo rm -rf /usr/local/go
-curl -Ls https://go.dev/dl/go1.19.10.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
+curl -Ls https://go.dev/dl/go1.21.13.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
 eval $(echo 'export PATH=$PATH:/usr/local/go/bin' | sudo tee /etc/profile.d/golang.sh)
 eval $(echo 'export PATH=$PATH:$HOME/go/bin' | tee -a $HOME/.profile)
 ```
@@ -45,7 +45,7 @@ cd $HOME
 rm -rf uptick
 git clone https://github.com/UptickNetwork/uptick.git
 cd uptick
-git checkout v0.2.8
+git checkout v0.2.19
 
 # Build binaries
 make build
@@ -64,7 +64,7 @@ sudo ln -s $HOME/.uptickd/cosmovisor/current/bin/uptickd /usr/local/bin/uptickd 
 
 ```bash
 # Download and install Cosmovisor
-go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.4.0
+go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.7.0
 
 # Create service
 sudo tee /etc/systemd/system/uptickd.service > /dev/null << EOF
@@ -127,7 +127,7 @@ sed -i -e "s%^address = \"tcp://0.0.0.0:1317\"%address = \"tcp://0.0.0.0:11517\"
 ### Download latest chain snapshot
 
 ```bash
-curl -L https://snapshots.kjnodes.com/uptick/snapshot_latest.tar.lz4 | tar -Ilz4 -xf - -C $HOME/.uptickd
+curl -L https://ss.uptick.nodestake.org/2024-11-27_uptick_9146297.tar.lz4 | tar -Ilz4 -xf - -C $HOME/.uptickd
 [[ -f $HOME/.uptickd/data/upgrade-info.json ]] && cp $HOME/.uptickd/data/upgrade-info.json $HOME/.uptickd/cosmovisor/genesis/upgrade-info.json
 ```
 
