@@ -74,7 +74,7 @@ After=network-online.target
 
 [Service]
 User=$USER
-ExecStart=$(which cosmovisor) run start
+ExecStart=/home/nkbserver/go/bin/cosmovisor run start --chain-id=uptick_117-1
 Restart=on-failure
 RestartSec=10
 LimitNOFILE=65535
