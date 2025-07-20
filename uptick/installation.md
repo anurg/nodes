@@ -32,7 +32,7 @@ sudo apt -qy upgrade
 
 ```bash
 sudo rm -rf /usr/local/go
-curl -Ls https://go.dev/dl/go1.21.13.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
+curl -Ls https://go.dev/dl/go1.23.8.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
 eval $(echo 'export PATH=$PATH:/usr/local/go/bin' | sudo tee /etc/profile.d/golang.sh)
 eval $(echo 'export PATH=$PATH:$HOME/go/bin' | tee -a $HOME/.profile)
 ```
@@ -102,8 +102,8 @@ uptickd config node tcp://localhost:11557
 uptickd init $MONIKER --chain-id uptick_117-1
 
 # Download genesis and addrbook
-curl -Ls https://snapshots.kjnodes.com/uptick/genesis.json > $HOME/.uptickd/config/genesis.json
-curl -Ls https://snapshots.kjnodes.com/uptick/addrbook.json > $HOME/.uptickd/config/addrbook.json
+wget -O $HOME/.uptickd/config/genesis.json https://server-1.itrocket.net/mainnet/uptick/genesis.json
+wget -O $HOME/.uptickd/config/addrbook.json  https://server-1.itrocket.net/mainnet/uptick/addrbook.json
 
 # Add seeds
 sed -i -e "s|^seeds *=.*|seeds = \"400f3d9e30b69e78a7fb891f60d76fa3c73f0ecc@uptick.rpc.kjnodes.com:11559\"|" $HOME/.uptickd/config/config.toml
@@ -127,7 +127,8 @@ sed -i -e "s%^address = \"tcp://0.0.0.0:1317\"%address = \"tcp://0.0.0.0:11517\"
 ### Download latest chain snapshot
 
 ```bash
-curl -L https://ss.uptick.nodestake.org/2024-11-27_uptick_9146297.tar.lz4 | tar -Ilz4 -xf - -C $HOME/.uptickd
+curl -L https://ss.uptick.nodestake.org/2025-07-20_uptick_12722597.tar | tar -Ilz4 -xf - -C $HOME/.uptickd
+# Always pick the latest snapshot
 [[ -f $HOME/.uptickd/data/upgrade-info.json ]] && cp $HOME/.uptickd/data/upgrade-info.json $HOME/.uptickd/cosmovisor/genesis/upgrade-info.json
 ```
 
