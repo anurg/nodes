@@ -48,7 +48,7 @@ make build
 
 ```
 mkdir -p $HOME/.uptickd/cosmovisor/genesis/bin
-mv build/seid $HOME/.uptickd/cosmovisor/genesis/bin/
+mv build/uptickd $HOME/.uptickd/cosmovisor/genesis/bin/
 rm -rf build
 ```
 
@@ -133,7 +133,7 @@ go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.7.0
 
 ```
 # Create a service
-sudo tee /etc/systemd/system/uptick.service > /dev/null << EOF
+sudo tee /etc/systemd/system/uptickd.service > /dev/null << EOF
 [Unit]
 Description=Uptick node service
 After=network-online.target
