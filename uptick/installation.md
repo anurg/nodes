@@ -196,3 +196,20 @@ source <(curl -s https://raw.githubusercontent.com/nodejumper-org/cosmos-scripts
 sudo hostnamectl set-hostname YOUR_SERVERNAME
 ```
 # now you can logout (exit) and login again using ssh admin@YOUR_SERVER_IP
+
+https://itrocket.net/services/mainnet/uptick/installation/
+
+```
+# Install Go
+sudo rm -rf /usr/local/go
+curl -L https://go.dev/dl/go1.22.7.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
+echo 'export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin' >> $HOME/.profile
+source .profile
+```
+
+```
+# Set node CLI configuration
+uptickd config set client chain-id uptick_117-1
+uptickd config set client keyring-backend file
+uptickd config set client node tcp://localhost:20457
+```
