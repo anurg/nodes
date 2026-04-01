@@ -1,6 +1,6 @@
 #### Dependencies Installation
 
-# Install dependencies for building from source
+##### Install dependencies for building from source
 ```
 sudo apt update
 sudo apt install -y curl git jq lz4 build-essential
@@ -15,8 +15,8 @@ source .profile
 ```
 
 #### Node Installation
+##### Clone project repository
 ```
-# Clone project repository
 cd && rm -rf uptick
 git clone https://github.com/UptickNetwork/uptick
 cd uptick
@@ -40,10 +40,11 @@ cp $(which uptickd) $HOME/.uptickd/cosmovisor/genesis/bin
 ```
 
 ##### Set node CLI configuration
+```
 uptickd config set client chain-id uptick_117-1
 uptickd config set client keyring-backend file
 uptickd config set client node tcp://localhost:20457
-
+```
 ##### Initialize the node
 ```
 uptickd init "nkbblocks" --chain-id uptick_117-1
