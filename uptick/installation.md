@@ -34,9 +34,9 @@ make install
 ```
 ##### # config and init app
 ```
-uptickd config node tcp://localhost:${UPTICK_PORT}657
-uptickd config keyring-backend os
-uptickd config chain-id uptick_117-1
+uptickd config set client node tcp://localhost:${UPTICK_PORT}657
+uptickd config set client keyring-backend os
+uptickd config set client chain-id uptick_117-1
 uptickd init "nkbblocks" --chain-id uptick_117-1
 ```
 
