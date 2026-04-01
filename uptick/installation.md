@@ -46,14 +46,18 @@ make build
 
 ##### Prepare binaries for Cosmovisor
 
+```
 mkdir -p $HOME/.uptickd/cosmovisor/genesis/bin
 mv build/seid $HOME/.uptickd/cosmovisor/genesis/bin/
 rm -rf build
+```
 
 ##### Create application symlinks
 
+```
 ln -s $HOME/.uptickd/cosmovisor/genesis $HOME/.uptickd/cosmovisor/current -f
 sudo ln -s $HOME/.uptickd/cosmovisor/current/bin/uptickd /usr/local/bin/uptickd -f
+```
 
 ##### # config and init app
 
