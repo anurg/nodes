@@ -36,21 +36,24 @@ rm -rf uptick
 git clone https://github.com/UptickNetwork/uptick.git
 cd uptick
 git checkout v0.3.0
-make install
 ```
 
-##### Prepare cosmovisor directories
+##### Build binaries
 
 ```
+make build
+```
+
+##### Prepare binaries for Cosmovisor
+
 mkdir -p $HOME/.uptickd/cosmovisor/genesis/bin
+mv build/seid $HOME/.uptickd/cosmovisor/genesis/bin/
+rm -rf build
+
+##### Create application symlinks
+
 ln -s $HOME/.uptickd/cosmovisor/genesis $HOME/.uptickd/cosmovisor/current -f
-```
-
-##### Copy binary to cosmovisor directory
-
-```
-cp $(which uptickd) $HOME/.uptickd/cosmovisor/genesis/bin
-```
+sudo ln -s $HOME/.uptickd/cosmovisor/current/bin/uptickd /usr/local/bin/uptickd -f
 
 ##### # config and init app
 
@@ -125,20 +128,6 @@ go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.7.0
 ##### # create service file
 
 ```
-<!-- sudo tee /etc/systemd/system/uptickd.service > /dev/null <<EOF
-[Unit]
-Description=Uptick node
-After=network-online.target
-[Service]
-User=$USER
-WorkingDirectory=$HOME/.uptickd
-ExecStart=$(which uptickd) start --home $HOME/.uptickd --chain-id uptick_117-1
-Restart=on-failure
-RestartSec=5
-LimitNOFILE=65535
-[Install]
-WantedBy=multi-user.target
-EOF -->
 # Create a service
 sudo tee /etc/systemd/system/uptick.service > /dev/null << EOF
 [Unit]
@@ -155,6 +144,7 @@ Environment="DAEMON_HOME=$HOME/.uptickd"
 Environment="DAEMON_NAME=uptickd"
 Environment="UNSAFE_SKIP_BACKUP=true"
 Environment="DAEMON_ALLOW_DOWNLOAD_BINARIES=true"
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$HOME/.uptickd/cosmovisor/current/bin"
 [Install]
 WantedBy=multi-user.target
 EOF
