@@ -1,12 +1,12 @@
-#### Dependencies Installation
+https://itrocket.net/services/mainnet/uptick/installation/
 
-##### Install dependencies for building from source
+##### Uptick Node Installation
 ```
-sudo apt update
-sudo apt install -y curl git jq lz4 build-essential
+# install dependencies, if needed
+sudo apt update && sudo apt upgrade -y
+sudo apt install curl git wget htop tmux build-essential jq make lz4 gcc unzip -y
 ```
-
-# Install Go
+##### Install Go
 ```
 sudo rm -rf /usr/local/go
 curl -L https://go.dev/dl/go1.22.7.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
@@ -14,202 +14,109 @@ echo 'export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin' >> $HOME/.profile
 source .profile
 ```
 
-#### Node Installation
-##### Clone project repository
+##### Set Environment Variables
 ```
-cd && rm -rf uptick
-git clone https://github.com/UptickNetwork/uptick
+# set vars
+echo "export WALLET="wallet"" >> $HOME/.bash_profile
+echo "export MONIKER="nkbblocks"" >> $HOME/.bash_profile
+echo "export UPTICK_CHAIN_ID="uptick_117-1"" >> $HOME/.bash_profile
+echo "export UPTICK_PORT="35"" >> $HOME/.bash_profile
+source $HOME/.bash_profile
+```
+##### # download binary
+```
+cd $HOME
+rm -rf uptick
+git clone https://github.com/UptickNetwork/uptick.git
 cd uptick
 git checkout v0.3.0
-```
-
-##### Build binary
-```
 make install
 ```
-
-##### Prepare cosmovisor directories
+##### # config and init app
 ```
-mkdir -p $HOME/.uptickd/cosmovisor/genesis/bin
-ln -s $HOME/.uptickd/cosmovisor/genesis $HOME/.uptickd/cosmovisor/current -f
-```
-
-##### Copy binary to cosmovisor directory
-```
-cp $(which uptickd) $HOME/.uptickd/cosmovisor/genesis/bin
-```
-
-##### Set node CLI configuration
-```
-uptickd config set client chain-id uptick_117-1
-uptickd config set client keyring-backend file
-uptickd config set client node tcp://localhost:20457
-```
-##### Initialize the node
-```
+uptickd config node tcp://localhost:${UPTICK_PORT}657
+uptickd config keyring-backend os
+uptickd config chain-id uptick_117-1
 uptickd init "nkbblocks" --chain-id uptick_117-1
 ```
 
-##### Download genesis and addrbook files
+###### download genesis and addrbook
 ```
-curl -L https://snapshots.nodejumper.io/uptick/genesis.json > $HOME/.uptickd/config/genesis.json
-curl -L https://snapshots.nodejumper.io/uptick/addrbook.json > $HOME/.uptickd/config/addrbook.json
-```
-
-##### Set seeds
-```
-sed -i -e 's|^seeds *=.*|seeds = "e71bae28852a0b603f7360ec17fe91e7f065f324@uptick-mainnet-seed.itrocket.net:35656,df949a46ae6529ae1e09b034b49716468d5cc7e9@seeds.stakerhouse.com:10656,bddaa78825892bde04b5aa8f28b95a072a50eaf9@mainnet.seednode.citizenweb3.com:29656,dd482d080820020b144ca2efaf128d78261dea82@uptick-mainnet-peer.itrocket.net:10656,c65c6ecfb60635fc8a076b6f90fcd2607aceaa64@uptick.peers.stavr.tech:3156,37604dc6535a2f1b91e38c35f77b5be4a93c35b2@45.77.168.172:26656,bddaa78825892bde04b5aa8f28b95a072a50eaf9@78.46.79.242:29656"|' $HOME/.uptickd/config/config.toml
+wget -O $HOME/.uptickd/config/genesis.json https://server-3.itrocket.net/mainnet/uptick/genesis.json
+wget -O $HOME/.uptickd/config/addrbook.json  https://server-3.itrocket.net/mainnet/uptick/addrbook.json
 ```
 
-#### Set minimum gas price
+###### set seeds and peers
 ```
-sed -i -e 's|^minimum-gas-prices *=.*|minimum-gas-prices = "13000000000auptick"|' $HOME/.uptickd/config/app.toml
-```
-
-##### Set pruning
-```
-sed -i \
-  -e 's|^pruning *=.*|pruning = "custom"|' \
-  -e 's|^pruning-keep-recent *=.*|pruning-keep-recent = "100"|' \
-  -e 's|^pruning-interval *=.*|pruning-interval = "17"|' \
-  $HOME/.uptickd/config/app.toml
+SEEDS="e71bae28852a0b603f7360ec17fe91e7f065f324@uptick-mainnet-seed.itrocket.net:35656"
+PEERS="dd482d080820020b144ca2efaf128d78261dea82@uptick-mainnet-peer.itrocket.net:10656,1ec3f0994e9846d9cde42a6c3e4232228ccb0e7e@65.109.53.24:35656,3d797f708f1f210e2e7ac5875d7a18586c0f6f8d@46.37.123.53:26656,ee045c74c0678f1122650a3a5223923977cae1b3@65.109.93.152:30656,ccb5574802476107befcfdb79867a942008fdd82@167.235.9.223:61156,c21eeb897d3fa45a81772b56038045d1d873252e@142.132.199.236:30656,d437de9c0b06e4270206a789fcefbb75973a5bb8@167.235.2.246:43756,ea9c7688fa12f96c13cb37692fb129a780f6660e@65.109.88.251:11096,6af07daddb8a57c01d05d8c0894f8293a41090d0@144.76.195.75:45056,446de8c68b97e25bb48e8460eae8f0eb49aa5d62@46.4.55.46:21656,90c0c03d27e5b4354bffb709d28340f2657ca1c7@138.201.121.185:26679,8ecd3260a19d2b112f6a84e0c091640744ec40c5@185.165.241.20:26666,14ca9d73314dd519bc0b0be8511c88f85fe6873e@46.4.81.204:17656,c7abddafe697b2a75a1567e0fe274d919e5fa404@65.109.106.214:15656,bd2e1f218fde74045fbcff3fe36c467e7f05d7a3@198.244.165.50:21656,0cba8f6d9de4a017c382f57e5389f0ad138605f4@144.76.74.73:15956,446a4b3a6dcfc8f6c55dc02ce49e98936a713920@176.9.92.135:60756,37e4491bd756cf0ae5281c6f0da4bdcefe723eba@135.181.109.175:15656,f7d2088f31ea5b0a172b66b3c5edabdfd18cd4e9@[2a01:4f9:c011:89db::1]:26656"
+sed -i -e "/^\[p2p\]/,/^\[/{s/^[[:space:]]*seeds *=.*/seeds = \"$SEEDS\"/}" \
+       -e "/^\[p2p\]/,/^\[/{s/^[[:space:]]*persistent_peers *=.*/persistent_peers = \"$PEERS\"/}" $HOME/.uptickd/config/config.toml
 ```
 
-##### Enable prometheus
+##### # set custom ports in app.toml
 ```
-sed -i -e 's|^prometheus *=.*|prometheus = true|' $HOME/.uptickd/config/config.toml
-```
-
-##### Change ports
-```
-sed -i -e "s%:1317%:20417%; s%:8080%:20480%; s%:9090%:20490%; s%:9091%:20491%; s%:8545%:20445%; s%:8546%:20446%; s%:6065%:20465%" $HOME/.uptickd/config/app.toml
-sed -i -e "s%:26658%:20458%; s%:26657%:20457%; s%:6060%:20460%; s%:26656%:20456%; s%:26660%:20461%" $HOME/.uptickd/config/config.toml
-```
-
-##### Download latest chain data snapshot
-```
-curl "https://snapshots.nodejumper.io/uptick/uptick_latest.tar.lz4" | lz4 -dc - | tar -xf - -C "$HOME/.uptickd"
+sed -i.bak -e "s%:1317%:${UPTICK_PORT}317%g;
+s%:8080%:${UPTICK_PORT}080%g;
+s%:9090%:${UPTICK_PORT}090%g;
+s%:9091%:${UPTICK_PORT}091%g;
+s%:8545%:${UPTICK_PORT}545%g;
+s%:8546%:${UPTICK_PORT}546%g;
+s%:6065%:${UPTICK_PORT}065%g" $HOME/.uptickd/config/app.toml
 ```
 
-##### Install Cosmovisor
+##### # set custom ports in config.toml file
 ```
-go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.7.0
+sed -i.bak -e "s%:26658%:${UPTICK_PORT}658%g;
+s%:26657%:${UPTICK_PORT}657%g;
+s%:6060%:${UPTICK_PORT}060%g;
+s%:26656%:${UPTICK_PORT}656%g;
+s%^external_address = \"\"%external_address = \"$(wget -qO- eth0.me):${UPTICK_PORT}656\"%;
+s%:26660%:${UPTICK_PORT}660%g" $HOME/.uptickd/config/config.toml
 ```
 
-#### Create a service
+##### # config pruning
 ```
-sudo tee /etc/systemd/system/uptick.service > /dev/null << EOF
+sed -i -e "s/^pruning *=.*/pruning = \"custom\"/" $HOME/.uptickd/config/app.toml 
+sed -i -e "s/^pruning-keep-recent *=.*/pruning-keep-recent = \"100\"/" $HOME/.uptickd/config/app.toml
+sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"19\"/" $HOME/.uptickd/config/app.toml
+```
+##### # set minimum gas price, enable prometheus and disable indexing
+```
+sed -i 's|minimum-gas-prices =.*|minimum-gas-prices = "0.0025auptick"|g' $HOME/.uptickd/config/app.toml
+sed -i -e "s/prometheus = false/prometheus = true/" $HOME/.uptickd/config/config.toml
+sed -i -e "s/^indexer *=.*/indexer = \"null\"/" $HOME/.uptickd/config/config.toml
+```
+
+##### # create service file
+```
+sudo tee /etc/systemd/system/uptickd.service > /dev/null <<EOF
 [Unit]
-Description=Uptick node service
+Description=Uptick node
 After=network-online.target
 [Service]
 User=$USER
 WorkingDirectory=$HOME/.uptickd
-ExecStart=$(which cosmovisor) run start
+ExecStart=$(which uptickd) start --home $HOME/.uptickd --chain-id uptick_117-1
 Restart=on-failure
 RestartSec=5
 LimitNOFILE=65535
-Environment="DAEMON_HOME=$HOME/.uptickd"
-Environment="DAEMON_NAME=uptickd"
-Environment="UNSAFE_SKIP_BACKUP=true"
-Environment="DAEMON_ALLOW_DOWNLOAD_BINARIES=true"
 [Install]
 WantedBy=multi-user.target
 EOF
+```
+##### # reset and download snapshot
+```
+uptickd tendermint unsafe-reset-all --home $HOME/.uptickd
+if curl -s --head curl https://server-3.itrocket.net/mainnet/uptick/uptick_2026-04-01_16646629_snap.tar.lz4 | head -n 1 | grep "200" > /dev/null; then
+  curl https://server-3.itrocket.net/mainnet/uptick/uptick_2026-04-01_16646629_snap.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/.uptickd
+    else
+  echo "no snapshot found"
+fi
+```
+##### # enable and start service
+```
 sudo systemctl daemon-reload
-sudo systemctl enable uptick.service
-```
-
-#### Start the service and check the logs
-```
-sudo systemctl start uptick.service
-sudo journalctl -u uptick.service -f --no-hostname -o cat
-```
------
-
-### Secure Server Setup (Optional)
-
-##### generate ssh keys, if you don't have them already, DO IT ON YOUR LOCAL MACHINE
-```
-ssh-keygen -t rsa
-```
-
-# save the output, we'll use it later on instead of YOUR_PUBLIC_SSH_KEY
-```
-cat ~/.ssh/id_rsa.pub
-```
-##### upgrade system packages
-```
-sudo apt update
-sudo apt upgrade -y
-```
-
-##### add new admin user
-```
-sudo adduser admin --disabled-password -q
-```
-
-#### upload public ssh key, replace YOUR_PUBLIC_SSH_KEY with the key above
-```
-mkdir /home/admin/.ssh
-echo "YOUR_PUBLIC_SSH_KEY" >> /home/admin/.ssh/authorized_keys
-sudo chown admin: /home/admin/.ssh
-sudo chown admin: /home/admin/.ssh/authorized_keys
-
-echo "admin ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-```
-##### disable root login, disable password authentication, use ssh keys only
-```
-sudo sed -i 's|^PermitRootLogin .*|PermitRootLogin no|' /etc/ssh/sshd_config
-sudo sed -i 's|^ChallengeResponseAuthentication .*|ChallengeResponseAuthentication no|' /etc/ssh/sshd_config
-sudo sed -i 's|^#PasswordAuthentication .*|PasswordAuthentication no|' /etc/ssh/sshd_config
-sudo sed -i 's|^#PermitEmptyPasswords .*|PermitEmptyPasswords no|' /etc/ssh/sshd_config
-sudo sed -i 's|^#PubkeyAuthentication .*|PubkeyAuthentication yes|' /etc/ssh/sshd_config
-
-sudo systemctl restart sshd
-```
-# install fail2ban
-```
-sudo apt install -y fail2ban
-```
-# install and configure firewall
-```
-sudo apt install -y ufw
-sudo ufw default allow outgoing
-sudo ufw default deny incoming
-sudo ufw allow ssh
-sudo ufw allow 9100
-sudo ufw allow 26656
-```
-# make sure you expose ALL necessary ports, only after that enable firewall
-```
-sudo ufw enable
-```
-# make terminal colorful
-```
-sudo su - admin
-source <(curl -s https://raw.githubusercontent.com/nodejumper-org/cosmos-scripts/master/utils/enable_colorful_bash.sh)
-```
-
-# update servername, if needed, replace YOUR_SERVERNAME with wanted server name
-```
-sudo hostnamectl set-hostname YOUR_SERVERNAME
-```
-# now you can logout (exit) and login again using ssh admin@YOUR_SERVER_IP
-
-https://itrocket.net/services/mainnet/uptick/installation/
-
-```
-# Install Go
-sudo rm -rf /usr/local/go
-curl -L https://go.dev/dl/go1.22.7.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
-echo 'export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin' >> $HOME/.profile
-source .profile
-```
-
-```
-# Set node CLI configuration
-uptickd config set client chain-id uptick_117-1
-uptickd config set client keyring-backend file
-uptickd config set client node tcp://localhost:20457
+sudo systemctl enable uptickd
+sudo systemctl restart uptickd && sudo journalctl -u uptickd -fo cat
 ```
