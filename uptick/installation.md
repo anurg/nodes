@@ -126,7 +126,7 @@ sed -i -e "s/^indexer *=.*/indexer = \"null\"/" $HOME/.uptickd/config/config.tom
 ##### Install Cosmovisor
 
 ```
-go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.7.0
+go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@latest
 ```
 
 ##### # create service file
