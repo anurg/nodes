@@ -147,7 +147,7 @@ LimitNOFILE=65535
 Environment="DAEMON_HOME=$HOME/.uptickd"
 Environment="DAEMON_NAME=uptickd"
 Environment="UNSAFE_SKIP_BACKUP=true"
-Environment="DAEMON_ALLOW_DOWNLOAD_BINARIES=true"
+Environment="DAEMON_ALLOW_DOWNLOAD_BINARIES=false"
 Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$HOME/.uptickd/cosmovisor/current/bin"
 [Install]
 WantedBy=multi-user.target
