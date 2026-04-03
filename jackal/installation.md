@@ -1,4 +1,5 @@
 ##### Jackal Node Installation Guide
 
-https://noders.services/mainnet/jackal/install
+https://app.nodejumper.io/jackal/installation
 
+https://polkachu.com/tendermint_snapshots/jackal
