@@ -11,20 +11,26 @@ sudo apt install curl git wget htop tmux build-essential jq make lz4 gcc unzip -
 ##### Install Go
 
 ```
+cd $HOME
+VER="1.23.5"
+wget "https://golang.org/dl/go$VER.linux-amd64.tar.gz"
 sudo rm -rf /usr/local/go
-curl -L https://go.dev/dl/go1.23.8.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
-echo 'export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin' >> $HOME/.bash_profile
+sudo tar -C /usr/local -xzf "go$VER.linux-amd64.tar.gz"
+rm "go$VER.linux-amd64.tar.gz"
+[ ! -f ~/.bash_profile ] && touch ~/.bash_profile
+echo "export PATH=$PATH:/usr/local/go/bin:~/go/bin" >> ~/.bash_profile
 source $HOME/.bash_profile
+[ ! -d ~/go/bin ] && mkdir -p ~/go/bin
 ```
 
 ##### Set Environment Variables
 
 ```
 # set vars
-echo "export WALLET="wallet"" >> $HOME/.bash_profile
-echo "export MONIKER="nkbblocks"" >> $HOME/.bash_profile
-echo "export UPTICK_CHAIN_ID="uptick_117-1"" >> $HOME/.bash_profile
-echo "export UPTICK_PORT="35"" >> $HOME/.bash_profile
+echo 'export WALLET="wallet"' >> $HOME/.bash_profile
+echo 'export MONIKER="nkbblocks"' >> $HOME/.bash_profile
+echo 'export UPTICK_CHAIN_ID="uptick_117-1"' >> $HOME/.bash_profile
+echo 'export UPTICK_PORT="35"' >> $HOME/.bash_profile
 source $HOME/.bash_profile
 ```
 
@@ -126,7 +132,7 @@ sed -i -e "s/^indexer *=.*/indexer = \"null\"/" $HOME/.uptickd/config/config.tom
 ##### Install Cosmovisor
 
 ```
-go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@latest
+go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@v1.6.0
 ```
 
 ##### # create service file
@@ -140,7 +146,7 @@ After=network-online.target
 [Service]
 User=$USER
 WorkingDirectory=$HOME/.uptickd
-ExecStart=$(which cosmovisor) run start
+ExecStart=$(which cosmovisor) run start --chain-id uptick_117-1
 Restart=on-failure
 RestartSec=5
 LimitNOFILE=65535
