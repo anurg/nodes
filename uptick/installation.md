@@ -55,6 +55,9 @@ make build
 ```
 mkdir -p $HOME/.uptickd/cosmovisor/genesis/bin
 mv build/uptickd $HOME/.uptickd/cosmovisor/genesis/bin/
+
+mkdir -p  /home/nkbblocks/.uptickd/cosmovisor/upgrades/v0.3.0/bin/
+cp $HOME/.uptickd/cosmovisor/genesis/bin/uptickd  /home/nkbblocks/.uptickd/cosmovisor/upgrades/v0.3.0/bin/
 rm -rf build
 ```
 
