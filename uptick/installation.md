@@ -178,3 +178,9 @@ sudo systemctl daemon-reload
 sudo systemctl enable uptickd
 sudo systemctl restart uptickd && sudo journalctl -u uptickd -fo cat
 ```
+
+#### Error - libwasmvm.x86_64.so is not found
+```
+sudo cp '/home/nkbblocks/go/pkg/mod/github.com/!cosm!wasm/wasmvm/v2@v2.1.5/internal/api/libwasmvm.x86_64.so' /usr/lib/
+sudo ldconfig
+```
